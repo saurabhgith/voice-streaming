@@ -1,5 +1,5 @@
 Flask==2.2.2
 Flask-SocketIO==5.3.0
-google-cloud-speech==2.8.1
+google-cloud-speech==2.3.1
 openai==1.2.3  # Ensure this is the latest version
 dotenv==1.0.0  # For environment variable management
