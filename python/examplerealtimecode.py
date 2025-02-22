@@ -8,26 +8,12 @@ from typing import Optional, Callable, List, Dict, Any
 from enum import Enum
 from pydub import AudioSegment
 
-from llama_index.tools import BaseTool, AsyncBaseTool
-from llama_index.bridge.pydantic import BaseModel
+from llama_index_core.tools import BaseTool, AsyncBaseTool, ToolSelection, adapt_to_async_tool, call_tool_with_selection
+
 
 class TurnDetectionMode(Enum):
     SERVER_VAD = "server_vad"
     MANUAL = "manual"
-
-class ToolSelection(BaseModel):
-    tool_id: str
-    tool_name: str
-    tool_kwargs: dict
-
-def adapt_to_async_tool(tool):
-    return tool
-
-async def call_tool_with_selection(selection, tools, verbose=False):
-    for tool in tools:
-        if tool.metadata.name == selection.tool_name:
-            return await tool(**selection.tool_kwargs)
-    return None
 
 class RealtimeClient:
     """
@@ -113,9 +99,25 @@ class RealtimeClient:
         self._print_input_transcript = False
         self._output_transcript_buffer = ""
         
-        
+    def on_text_delta(self, callback: Callable[[str], None]):
+        """Decorator for text delta events"""
+        self.on_text_delta = callback
+        return callback
 
-        
+    def on_audio_delta(self, callback: Callable[[bytes], None]):
+        """Decorator for audio delta events"""
+        self.on_audio_delta = callback
+        return callback
+
+    def on_input_transcript(self, callback: Callable[[str], None]):
+        """Decorator for input transcript events"""
+        self.on_input_transcript = callback
+        return callback
+
+    def on_output_transcript(self, callback: Callable[[str], None]):
+        """Decorator for output transcript events"""
+        self.on_output_transcript = callback
+        return callback
 
     async def connect(self) -> None:
         """Establish WebSocket connection with the Realtime API."""
