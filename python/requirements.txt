@@ -8,4 +8,4 @@ python-dotenv==1.0.0
 websockets==12.0
 pydub==0.25.1
 eventlet==0.33.3
-llama-index-core>=0.12.19
+llama-index==0.9.8
