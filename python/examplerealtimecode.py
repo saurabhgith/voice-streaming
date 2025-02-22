@@ -8,7 +8,7 @@ from typing import Optional, Callable, List, Dict, Any
 from enum import Enum
 from pydub import AudioSegment
 
-from llama_index.core.tools import BaseTool, AsyncBaseTool, ToolSelection, adapt_to_async_tool, call_tool_with_selection
+from llama_index_core.tools import BaseTool, AsyncBaseTool, ToolSelection, adapt_to_async_tool, call_tool_with_selection
 
 
 class TurnDetectionMode(Enum):
