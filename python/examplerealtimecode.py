@@ -8,11 +8,26 @@ from typing import Optional, Callable, List, Dict, Any
 from enum import Enum
 from pydub import AudioSegment
 
-from llama_index.tools import BaseTool, AsyncBaseTool, ToolSelection, adapt_to_async_tool, call_tool_with_selection
+from llama_index.tools import BaseTool, AsyncBaseTool
+from llama_index.bridge.pydantic import BaseModel
 
 class TurnDetectionMode(Enum):
     SERVER_VAD = "server_vad"
     MANUAL = "manual"
+
+class ToolSelection(BaseModel):
+    tool_id: str
+    tool_name: str
+    tool_kwargs: dict
+
+def adapt_to_async_tool(tool):
+    return tool
+
+async def call_tool_with_selection(selection, tools, verbose=False):
+    for tool in tools:
+        if tool.metadata.name == selection.tool_name:
+            return await tool(**selection.tool_kwargs)
+    return None
 
 class RealtimeClient:
     """
